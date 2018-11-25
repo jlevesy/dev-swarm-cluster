@@ -1,0 +1,25 @@
+---
+version: '3.6'
+
+networks:
+  swarm:
+    driver: "bridge"
+
+services:
+  control:
+    image: docker:dind
+    privileged: true
+    ports:
+      - 2375:2375
+    networks:
+      - swarm
+  manager:
+    image: docker:dind
+    privileged: true
+    networks:
+      - swarm
+  worker:
+    image: docker:dind
+    privileged: true
+    networks:
+      - swarm
