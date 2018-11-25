@@ -1,7 +1,7 @@
 # Requirements
 
-docker-compose
-docker
+- docker-compose
+- docker
 
 # How to use ?
 
