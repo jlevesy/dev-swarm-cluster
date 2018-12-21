@@ -3,11 +3,11 @@
 set -eu
 
 function control_docker() {
-  DOCKER_HOST=tcp://localhost:2375 docker $@
+  DOCKER_HOST=tcp://localhost:2375 docker "$@"
 }
 
 function docker_exec() {
-  docker exec -ti $@
+  docker exec -t "$@"
 }
 
 echo "Initializing the swarm..."
@@ -20,14 +20,18 @@ MANAGER_IP=$(control_docker info -f "{{.Swarm.NodeAddr}}")
 echo "Setuping masters..."
 
 for CID in $(docker ps -f name=manager -q); do
-  docker_exec ${CID} docker swarm join --token ${MANAGER_JOIN_TOKEN} ${MANAGER_IP}:2377
+  docker_exec "${CID}" docker swarm join --token "${MANAGER_JOIN_TOKEN}" "${MANAGER_IP}:2377" &
 done
+
+wait
 
 echo "Setuping workers..."
 
 for CID in $(docker ps -f name=worker -q); do
-  docker_exec ${CID} docker swarm join --token ${WORKER_JOIN_TOKEN} ${MANAGER_IP}:2377
+  docker_exec "${CID}" docker swarm join --token "${WORKER_JOIN_TOKEN}" "${MANAGER_IP}:2377" &
 done
+
+wait
 
 echo "All is good, enjoy your new swarm cluster !"
 
