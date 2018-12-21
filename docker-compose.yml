@@ -11,6 +11,9 @@ services:
     privileged: true
     ports:
       - 2375:2375
+      - 80:80
+      - 443:443
+      - 8080:8080
     networks:
       - swarm
   manager:
